@@ -1,7 +1,13 @@
-ATtiny85-based wireless sensor node. Uses BME280 humidity sensor and nRF24L01+ RF transceivers
+# AVR sensor node
+
+    Project is just started but already abandoned, because ATtiny85 cannot support both I2C and SPI devices at the same time (or it could with a software I2C implementation)...
+    
+    This will still be useful as a boilerplate AVR project.
+
+ATtiny85-based low-power wireless sensor node. Uses BME280 humidity sensor and nRF24L01+ RF transceivers.
 
 # Environment setup
-https://www.nongnu.org/avr-libc/user-manual/install_tools.html
+Source: https://www.nongnu.org/avr-libc/user-manual/install_tools.html
 
 ```bash
 sudo apt install build-essential texinfo libusb-1.0-0-dev autoconf libtool # for Ubuntu 20.04

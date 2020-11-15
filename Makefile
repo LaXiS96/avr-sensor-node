@@ -2,7 +2,7 @@ PREFIX=/home/laxis/avr/bin
 
 PROJECT=avr-sensor-node
 
-CFLAGS=-mmcu=attiny85 -Wall -Os -DF_CPU=8000000
+CFLAGS=-mmcu=attiny85 -Wall -O2 -DF_CPU=8000000
 
 SOURCES=$(wildcard *.c)
 INCLUDES=-I.

@@ -4,6 +4,8 @@
 #include <avr/wdt.h>
 #include <util/delay.h>
 
+#include "i2c.h"
+
 /*
 MCU sleeps in power down mode for most of the time, wakes up every ~4 seconds
 and checks if 1 minute has passed (with pretty low accuracy), if so it should
@@ -20,29 +22,66 @@ int main(void)
     DDRB &= 0;
     PORTB |= 0x3F;
 
-    // Setup PB4 as output
-    DDRB |= _BV(DDB4);
+    // // Setup PB4 as output
+    // DDRB |= _BV(DDB4);
 
-    // Setup watchdog to interrupt every 4 seconds
-    wdt_enable(WDTO_4S);
-    WDTCR |= _BV(WDIE);
-    sei();
+    // // Setup watchdog to interrupt every 4 seconds
+    // wdt_enable(WDTO_4S);
+    // WDTCR |= _BV(WDIE);
+    // sei();
 
-    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    // set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+
+    i2c_init();
 
     while (1)
     {
-        // Enter sleep mode
-        sleep_mode();
+        // // Enter sleep mode
+        // sleep_mode();
 
-        if (wakeCount >= MAX_WAKE_COUNT)
-        {
-            PORTB |= _BV(PB4);
-            _delay_ms(500);
-            PORTB &= ~_BV(PB4);
+        // if (wakeCount >= MAX_WAKE_COUNT)
+        // {
+        //     PORTB |= _BV(PB4);
+        //     _delay_ms(500);
+        //     PORTB &= ~_BV(PB4);
 
-            wakeCount = 0;
-        }
+        //     wakeCount = 0;
+        // }
+
+        // Wake up MPU6050
+        i2c_start();
+        i2c_write(I2C_ADDR7_WRITE(0x68));
+        i2c_write(0x6B);
+        i2c_write(0);
+        i2c_stop();
+
+        // TEMP_OUT_H
+        i2c_start();
+        i2c_write(I2C_ADDR7_WRITE(0x68));
+        i2c_write(0x41);
+        i2c_start();
+        i2c_write(I2C_ADDR7_READ(0x68));
+        i2c_read();
+        i2c_stop();
+
+        // TEMP_OUT_L
+        i2c_start();
+        i2c_write(I2C_ADDR7_WRITE(0x68));
+        i2c_write(0x42);
+        i2c_start();
+        i2c_write(I2C_ADDR7_READ(0x68));
+        i2c_read();
+        i2c_stop();
+
+        // _delay_ms(1);
+
+        // i2c_start();
+        // i2c_write(0x62 << 1);
+        // i2c_write('A');
+        // i2c_write('Z');
+        // i2c_stop();
+
+        _delay_ms(500);
     }
 }
 

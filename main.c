@@ -34,6 +34,20 @@ int main(void)
 
     i2c_init();
 
+    // BME280 reset
+    i2c_start();
+    i2c_write(I2C_ADDR7_WRITE(0x76));
+    i2c_write(0xE0); // reset
+    i2c_write(0xB6);
+    i2c_stop();
+
+    // BME280 enable humidity sensing
+    i2c_start();
+    i2c_write(I2C_ADDR7_WRITE(0x76));
+    i2c_write(0xF2); // ctrl_hum
+    i2c_write(0x01); // oversampling x1
+    i2c_stop();
+
     while (1)
     {
         // // Enter sleep mode
@@ -48,40 +62,27 @@ int main(void)
         //     wakeCount = 0;
         // }
 
-        // Wake up MPU6050
+        uint8_t bytes[8];
+
+        // BME280 enable temperature and pressure sensing, set mode (starts forced measurement)
         i2c_start();
-        i2c_write(I2C_ADDR7_WRITE(0x68));
-        i2c_write(0x6B);
-        i2c_write(0);
+        i2c_write(I2C_ADDR7_WRITE(0x76));
+        i2c_write(0xF4);       // ctrl_meas
+        i2c_write(0b00100101); // oversampling pressure:x1 temperature:x1, forced mode
         i2c_stop();
 
-        // TEMP_OUT_H
+        _delay_ms(10); // 8ms measurement time with this configuration (see datasheet chapter 9)
+
+        // BME280 read out measurement
         i2c_start();
-        i2c_write(I2C_ADDR7_WRITE(0x68));
-        i2c_write(0x41);
+        i2c_write(I2C_ADDR7_WRITE(0x76));
+        i2c_write(0xF7);
         i2c_start();
-        i2c_write(I2C_ADDR7_READ(0x68));
-        i2c_read();
+        i2c_write(I2C_ADDR7_READ(0x76));
+        i2c_read_buffer(bytes, 8);
         i2c_stop();
 
-        // TEMP_OUT_L
-        i2c_start();
-        i2c_write(I2C_ADDR7_WRITE(0x68));
-        i2c_write(0x42);
-        i2c_start();
-        i2c_write(I2C_ADDR7_READ(0x68));
-        i2c_read();
-        i2c_stop();
-
-        // _delay_ms(1);
-
-        // i2c_start();
-        // i2c_write(0x62 << 1);
-        // i2c_write('A');
-        // i2c_write('Z');
-        // i2c_stop();
-
-        _delay_ms(500);
+        _delay_ms(1000);
     }
 }
 

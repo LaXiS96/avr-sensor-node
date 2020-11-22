@@ -5,6 +5,7 @@
 #include <util/delay.h>
 
 #include "i2c.h"
+#include "radio.h"
 
 /*
 MCU sleeps in power down mode for most of the time, wakes up every ~4 seconds
@@ -31,6 +32,8 @@ int main(void)
     // sei();
 
     // set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+
+    radio_init();
 
     i2c_init();
 

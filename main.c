@@ -35,21 +35,23 @@ int main(void)
 
     radio_init();
 
-    i2c_init();
+    // i2c_init();
 
-    // BME280 reset
-    i2c_start();
-    i2c_write(I2C_ADDR7_WRITE(0x76));
-    i2c_write(0xE0); // reset
-    i2c_write(0xB6);
-    i2c_stop();
+    // // BME280 reset
+    // i2c_start();
+    // i2c_write(I2C_ADDR7_WRITE(0x76));
+    // i2c_write(0xE0); // reset
+    // i2c_write(0xB6);
+    // i2c_stop();
 
-    // BME280 enable humidity sensing
-    i2c_start();
-    i2c_write(I2C_ADDR7_WRITE(0x76));
-    i2c_write(0xF2); // ctrl_hum
-    i2c_write(0x01); // oversampling x1
-    i2c_stop();
+    // // BME280 enable humidity sensing
+    // i2c_start();
+    // i2c_write(I2C_ADDR7_WRITE(0x76));
+    // i2c_write(0xF2); // ctrl_hum
+    // i2c_write(0x01); // oversampling x1
+    // i2c_stop();
+
+    uint8_t data[] = {0, 0, 0b01010101, 'H', 'E', 'L', 'L', 'O', 0b01101001};
 
     while (1)
     {
@@ -65,25 +67,27 @@ int main(void)
         //     wakeCount = 0;
         // }
 
-        uint8_t bytes[8];
+        // uint8_t bytes[8];
 
-        // BME280 enable temperature and pressure sensing, set mode (starts forced measurement)
-        i2c_start();
-        i2c_write(I2C_ADDR7_WRITE(0x76));
-        i2c_write(0xF4);       // ctrl_meas
-        i2c_write(0b00100101); // oversampling pressure:x1 temperature:x1, forced mode
-        i2c_stop();
+        // // BME280 enable temperature and pressure sensing, set mode (starts forced measurement)
+        // i2c_start();
+        // i2c_write(I2C_ADDR7_WRITE(0x76));
+        // i2c_write(0xF4);       // ctrl_meas
+        // i2c_write(0b00100101); // oversampling pressure:x1 temperature:x1, forced mode
+        // i2c_stop();
 
-        _delay_ms(10); // 8ms measurement time with this configuration (see datasheet chapter 9)
+        // _delay_ms(10); // 8ms measurement time with this configuration (see datasheet chapter 9)
 
-        // BME280 read out measurement
-        i2c_start();
-        i2c_write(I2C_ADDR7_WRITE(0x76));
-        i2c_write(0xF7);
-        i2c_start();
-        i2c_write(I2C_ADDR7_READ(0x76));
-        i2c_read_buffer(bytes, 8);
-        i2c_stop();
+        // // BME280 read out measurement
+        // i2c_start();
+        // i2c_write(I2C_ADDR7_WRITE(0x76));
+        // i2c_write(0xF7);
+        // i2c_start();
+        // i2c_write(I2C_ADDR7_READ(0x76));
+        // i2c_read_buffer(bytes, 8);
+        // i2c_stop();
+
+        radio_tx_buffer(data, sizeof(data));
 
         _delay_ms(1000);
     }

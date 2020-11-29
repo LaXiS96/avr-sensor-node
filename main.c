@@ -1,3 +1,4 @@
+#include <string.h>
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include <avr/sleep.h>
@@ -29,7 +30,7 @@ int main(void)
     // // Setup watchdog to interrupt every 4 seconds
     // wdt_enable(WDTO_4S);
     // WDTCR |= _BV(WDIE);
-    // sei();
+    sei();
 
     // set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
@@ -51,7 +52,7 @@ int main(void)
     // i2c_write(0x01); // oversampling x1
     // i2c_stop();
 
-    uint8_t data[] = {0, 0, 0b01010101, 'H', 'E', 'L', 'L', 'O', 0b01101001};
+    char *data = "\xF5Hello, World!";
 
     while (1)
     {
@@ -87,7 +88,7 @@ int main(void)
         // i2c_read_buffer(bytes, 8);
         // i2c_stop();
 
-        radio_tx_buffer(data, sizeof(data));
+        radio_tx_buffer((uint8_t *)data, strlen(data));
 
         _delay_ms(1000);
     }

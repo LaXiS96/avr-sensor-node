@@ -2,7 +2,12 @@
 
 #include <stdint.h>
 
-/** Initialize IO and Timer */
+#define RADIO_SYNC_WORD 0b11110101
+
+/**
+ * Initialize IO and Timer.
+ * Remembre to enable global interrupts afterwards.
+ */
 void radio_init(void);
 
 /**

@@ -1,6 +1,8 @@
 # AVR sensor node
 
-ATtiny85-based low-power wireless sensor node. Uses BME280 humidity sensor and nRF24L01+ RF transceivers.
+ATtiny85-based low-power wireless sensor node.
+
+Uses a BME280 humidity sensor and 433MHz OOK transmitter (or nRF24L01+ RF transceiver, in the future).
 
 # Environment setup
 Source: https://www.nongnu.org/avr-libc/user-manual/install_tools.html
@@ -62,10 +64,15 @@ make install
 
 ## ISP ATtiny85
 Vcc -> 8
+
 GND -> 4
+
 RESET -> 1
+
 MISO -> 6
+
 MOSI -> 5
+
 SCK -> 7
 
 # Utils
